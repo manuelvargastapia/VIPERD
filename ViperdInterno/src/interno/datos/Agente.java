@@ -29,8 +29,8 @@ public abstract class Agente implements IDAO {
     protected void Configurar(IDTO dto) {
         dto.getPeticion().setFuente(this.fuente);
         dto.getPeticion().setComando(generarSQL(this.comando, this.fuente, dto));
+        TRAZADOR.info("origen: " + this.origen + " - fuente: " + this.fuente);
         this.dao.Conectar(dto);
-        TRAZADOR.info("fuente: " + this.fuente);
     }
     
     //IMPLEMENTACION DE LA INTERFACE "IDAO"
@@ -116,13 +116,12 @@ public abstract class Agente implements IDAO {
                 columnas = new String[this.estructura.size()];
                 for (IValueObject item: this.estructura.values()) {
                     String campo = item.get("d");
-                    String nombre = item.get("nombre");
                     if (item.get("filtro").contains("S") && !campo.isEmpty()) {
                         columnas[i] = new StringBuilder(campo).toString(); i++;
                     }
                     if (item.get("filtro").contains("C") && !campo.isEmpty()) {
                         clave = campo;
-                        valor = dto.getPeticion().getParametro(nombre);
+                        valor = dto.getPeticion().getParametro(campo);
                     }
                 }
                 sql = new StringBuilder("SELECT ").append(unirTextos(columnas, ", ")).append(" FROM ").append(tabla).append(" WHERE ").append(clave).append("='").append(valor).append("'").toString();
@@ -131,39 +130,23 @@ public abstract class Agente implements IDAO {
                 columnas = new String[this.estructura.size()];
                 for (IValueObject item: this.estructura.values()) {
                     String campo = item.get("d");
-                    String nombre = item.get("nombre");
                     if (item.get("filtro").contains("L") && !campo.isEmpty()) {
                         columnas[i] = new StringBuilder(campo).toString(); i++;
                     }
                 }
                 sql = new StringBuilder("SELECT ").append(unirTextos(columnas, ", ")).append(" FROM ").append(tabla).append(" ").toString();
                 break;
-            case "INSERT": 
-                str1 = new StringBuilder("INSERT INTO ");
-                str1.append(tabla).append(" (");
-                str2 = new StringBuilder(") VALUES (");
-                for (IValueObject item: this.estructura.values()) {
-                    String campo = item.get("d");
-                    String nombre = item.get("nombre");
-                    if (item.get("filtro").contains("I") && !campo.isEmpty()) {
-                        str1.append(campo).append(", ");
-                        str2.append("'").append(reemplazarComillas(dto.getPeticion().getParametro(nombre))).append("', ");
-                    }                
-                }
-                sql = reemplazarTexto((str1.toString() + str2.toString() + ")"), ", )", ")");
-                break;
             case "UPDATE": 
                 str1 = new StringBuilder("UPDATE ");
                 str1.append(tabla).append(" SET  ");
                 for (IValueObject item: this.estructura.values()) {
                     String campo = item.get("d");
-                    String nombre = item.get("nombre");
                     if (item.get("filtro").contains("U") && !campo.isEmpty()) {
-                        str1.append(campo).append("='").append(reemplazarComillas(dto.getPeticion().getParametro(nombre))).append("', ");
+                        str1.append(campo).append("='").append(reemplazarComillas(dto.getPeticion().getParametro(campo))).append("', ");
                     }
                     if (item.get("filtro").contains("C") && !campo.isEmpty()) {
                         clave = campo;
-                        valor = dto.getPeticion().getParametro(nombre);
+                        valor = dto.getPeticion().getParametro(campo);
                     }
                 }
                 sql = str1.toString();
@@ -172,13 +155,25 @@ public abstract class Agente implements IDAO {
             case "DELETE":
                 for (IValueObject item: this.estructura.values()) {
                     String campo = item.get("d");
-                    String nombre = item.get("nombre");
                     if (item.get("filtro").contains("C") && !campo.isEmpty()) {
                         clave = campo;
-                        valor = dto.getPeticion().getParametro(nombre);
+                        valor = dto.getPeticion().getParametro(campo);
                     }
                 }
                 sql = "DELETE FROM " + tabla + " WHERE " + clave + "='" + valor + "'";
+                break;
+            case "INSERT": 
+                str1 = new StringBuilder("INSERT INTO ");
+                str1.append(tabla).append(" (");
+                str2 = new StringBuilder(") VALUES (");
+                for (IValueObject item: this.estructura.values()) {
+                    String campo = item.get("d");
+                    if (item.get("filtro").contains("I") && !campo.isEmpty()) {
+                        str1.append(campo).append(", ");
+                        str2.append("'").append(reemplazarComillas(dto.getPeticion().getParametro(campo))).append("', ");
+                    }                
+                }
+                sql = reemplazarTexto((str1.toString() + str2.toString() + ")"), ", )", ")");
                 break;
             default:
                 sql = expresion;
