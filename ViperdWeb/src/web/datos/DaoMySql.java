@@ -8,10 +8,10 @@ package web.datos;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. */
 
+import interno.datos.Agente;
 import interno.nucleo.Interfaces.IDAO;
 import interno.nucleo.Interfaces.IDTO;
 import interno.nucleo.Interfaces.IRespuesta;
-import interno.datos.Agente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +53,8 @@ public final class DaoMySql implements IDAO {
         String expresion = "";
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
-            TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
+                TRAZADOR.info(expresion);
                 bd = db.getConnection();
                 Statement instruccion = bd.createStatement();
                 ResultSet datos = instruccion.executeQuery(expresion);
@@ -83,8 +83,8 @@ public final class DaoMySql implements IDAO {
         String uid = "";
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
-            TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
+                TRAZADOR.info(expresion);
                 bd = db.getConnection();
                 Statement instruccion = bd.createStatement();
                 int total = instruccion.executeUpdate(expresion, Statement.RETURN_GENERATED_KEYS);
@@ -122,6 +122,7 @@ public final class DaoMySql implements IDAO {
             try {if (null != bd) {bd.close();}}
             catch (SQLException e) {TRAZADOR.info(e.getMessage());}
         }
+        TRAZADOR.info("UID=" + uid + " - " + dto.getRespuesta().respuestaToString());
     }
     @Override public void Editar(IDTO dto) {
         Connection bd = null;
@@ -129,8 +130,8 @@ public final class DaoMySql implements IDAO {
         Integer total = 0;
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
-            TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
+                TRAZADOR.info(expresion);
                 bd = db.getConnection();
                 Statement instruccion = bd.createStatement();
                 total = instruccion.executeUpdate(expresion);
@@ -156,6 +157,7 @@ public final class DaoMySql implements IDAO {
             try {if (null != bd) {bd.close();}}
             catch (SQLException e) {TRAZADOR.info(e.getMessage());}
         }
+        TRAZADOR.info("filas=" + total.toString());
     }
     @Override public void Borrar(IDTO dto) {
         Connection bd = null;
@@ -163,8 +165,8 @@ public final class DaoMySql implements IDAO {
         Integer total= 0;
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
-            TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
+                TRAZADOR.info(expresion);
                 bd = db.getConnection();
                 Statement instruccion = bd.createStatement();
                 total = instruccion.executeUpdate(expresion);
@@ -190,6 +192,7 @@ public final class DaoMySql implements IDAO {
             try {if (null != bd) {bd.close();}}
             catch (SQLException e) {TRAZADOR.info(e.getMessage());}
         }
+        TRAZADOR.info("filas=" + total.toString());
     }
     
     //FUNCIONES PRIVADAS
