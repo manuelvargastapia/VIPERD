@@ -13,11 +13,16 @@ RD /s /q viperd\mysql\share
 RD /s /q viperd\mysql\tmp
 RD /s /q PruebaDesktop\build
 RD /s /q PruebaDesktop\dist
+RD /s /q PruebaDesktop\nbproject\private
 RD /s /q PruebaWeb\build
 RD /s /q PruebaWeb\dist
+RD /s /q PruebaWeb\nbproject\private
 RD /s /q ViperdInterno\build
+RD /s /q ViperdInterno\nbproject\private
 RD /s /q ViperdDesktop\build
+RD /s /q ViperdDesktop\nbproject\private
 RD /s /q ViperdWeb\build
+RD /s /q ViperdWeb\nbproject\private
 
 pause
 EXIT
