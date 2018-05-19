@@ -29,7 +29,10 @@ public class AgenteUsuarios extends Agente {
                 this.dao = DaoHTTPJson.Activar("http://administralo.cl/cursoptealto/", "", "");
                 break;
             case "MySql":
-                this.dao = DaoMySql.Activar("jdbc:mysql://localhost/bd_app", "usuario", "12345");
+                this.dao = DaoMySql.Activar("localhost:3307/bd_app", "usuario", "12345");
+                break;
+            case "SQLite":
+                this.dao = DaoSQLite.Activar("bd//bd.sqlite", "", "");
                 break;
         }
         Configurar(dto);
@@ -38,11 +41,11 @@ public class AgenteUsuarios extends Agente {
     //DEFINICION DE OPERACIONES
     protected enum OPERACION implements IOperacion {
         ObtenerSesion("HTTPJson", "app.php?op=autenticar&us=[login]&pw=[password]", "caso"),
-        SeleccionarUsuario("MySql", "SELECT", "app_usuarios"),
-        AgregarUsuario("MySql", "INSERT", "app_usuarios"),
-        EditarUsuario("MySql", "UPDATE", "app_usuarios"),
-        BorrarUsuario("MySql", "DELETE", "app_usuarios"),
-        ListaUsuarios("MySql", "LISTADO", "app_usuarios"),
+        SeleccionarUsuario("SQLite", "SELECT", "app_usuarios"),
+        AgregarUsuario("SQLite", "INSERT", "app_usuarios"),
+        EditarUsuario("SQLite", "UPDATE", "app_usuarios"),
+        BorrarUsuario("SQLite", "DELETE", "app_usuarios"),
+        ListaUsuarios("SQLite", "LISTADO", "app_usuarios"),
         ;
         private final String comando, origen, fuente;
         OPERACION(String origen, String comando, String fuente) {this.comando = comando; this.origen = origen; this.fuente = fuente;}
