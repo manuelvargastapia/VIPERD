@@ -17,30 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
-import org.apache.commons.dbcp2.BasicDataSource;
 
-//CLASE SINGLETON DaoMySql
-public final class DaoMySql implements IDAO {
-    protected final static Logger TRAZADOR = Logger.getLogger(DaoMySql.class.getName());
+//CLASE SINGLETON DaoSQLite
+public final class DaoSQLite implements IDAO {
+    protected final static Logger TRAZADOR = Logger.getLogger(DaoSQLite.class.getName());
     
-    private static DaoMySql instancia;
-    private static BasicDataSource db = null;
+    private static DaoSQLite instancia;
+    private static Connection bd;
 
     //CONSTRUCTOR PRIVADO + ACTIVADOR PUBLICO
-    private DaoMySql() {
-        db = new BasicDataSource();
-        db.setDriverClassName("com.mysql.jdbc.Driver");
-    }
-    public static synchronized DaoMySql Activar(String url, String usuario, String password) {
-        if (instancia == null) {instancia = new DaoMySql();}
-        db.setUsername(usuario);
-        db.setPassword(password);
-        db.setUrl("jdbc:mysql://" + url);
+    private DaoSQLite() {}
+    public static synchronized DaoSQLite Activar(String url, String usuario, String password) {
+        if (instancia == null) {instancia = new DaoSQLite();}
+        try {
+            Class.forName("org.sqlite.JDBC");
+            bd = DriverManager.getConnection("jdbc:sqlite:" + url);
+            TRAZADOR.info("Conectado a: " + url);
+        } catch (Exception e) {TRAZADOR.info("ERROR: " + e.getMessage());}
         return instancia;
     }
 
@@ -49,13 +48,11 @@ public final class DaoMySql implements IDAO {
         //No implementada
     }
     @Override public void Seleccionar(IDTO dto) {
-        Connection bd = null;
         String expresion = "";
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
             TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
-                bd = db.getConnection();
                 Statement instruccion = bd.createStatement();
                 ResultSet datos = instruccion.executeQuery(expresion);
                 mapearRespuesta(datos, dto.getRespuesta(), dto.getPeticion().getOperacion());
@@ -78,14 +75,12 @@ public final class DaoMySql implements IDAO {
         }
     }
     @Override public void Agregar(IDTO dto) {
-        Connection bd = null;
         String expresion = "";
         String uid = "";
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
             TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
-                bd = db.getConnection();
                 Statement instruccion = bd.createStatement();
                 int total = instruccion.executeUpdate(expresion, Statement.RETURN_GENERATED_KEYS);
                 dto.getRespuesta().setCuentaCasos(total);
@@ -125,14 +120,12 @@ public final class DaoMySql implements IDAO {
         TRAZADOR.info(expresion + " (UID=" + uid + ") - " + dto.getRespuesta().respuestaToString());
     }
     @Override public void Editar(IDTO dto) {
-        Connection bd = null;
         String expresion = "";
         Integer total = 0;
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
             TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
-                bd = db.getConnection();
                 Statement instruccion = bd.createStatement();
                 total = instruccion.executeUpdate(expresion);
                 dto.getRespuesta().setCuentaCasos(total);
@@ -160,14 +153,12 @@ public final class DaoMySql implements IDAO {
         TRAZADOR.info(expresion + " (filas=" + total.toString() + ")");
     }
     @Override public void Borrar(IDTO dto) {
-        Connection bd = null;
         String expresion = "";
         Integer total= 0;
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
             TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
-                bd = db.getConnection();
                 Statement instruccion = bd.createStatement();
                 total = instruccion.executeUpdate(expresion);
                 dto.getRespuesta().setCuentaCasos(total);
@@ -213,19 +204,16 @@ public final class DaoMySql implements IDAO {
         respuesta.setEstado("1");
         int cuenta = 0;
         try {
-            if (datos.first()) {
-                Map<String, String> fila;
+            while (datos.next()) {
+                Map<String, String> fila = new LinkedHashMap<>();
                 String valor;
-                do {
-                    fila = new LinkedHashMap<>();
-                    for (int i = 1; i <= datos.getMetaData().getColumnCount(); i++) {
-                        valor = "";
-                        if (null != datos.getObject(i)) {valor = datos.getObject(i).toString();}
-                        fila.put(datos.getMetaData().getColumnName(i), valor);
-                    }
-                    cuenta++;
-                    resultado.add(fila);
-                } while (datos.next());
+                for (int i = 1; i <= datos.getMetaData().getColumnCount(); i++) {
+                    valor = "";
+                    if (null != datos.getObject(i)) {valor = datos.getObject(i).toString();}
+                    fila.put(datos.getMetaData().getColumnName(i), valor);
+                }
+                cuenta++;
+                resultado.add(fila);
             }
         } catch (Exception e) {
             respuesta.setEstado("0");
