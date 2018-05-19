@@ -29,7 +29,7 @@ public class AgenteUsuarios extends Agente {
                 this.dao = DaoHTTPJson.Activar("http://administralo.cl/cursoptealto/", "", "");
                 break;
             case "MySql":
-                this.dao = DaoMySql.Activar("jdbc:mysql://localhost/bd_app", "usuario", "12345");
+                this.dao = DaoMySql.Activar("localhost:3307/bd_app", "usuario", "12345");
                 break;
         }
         Configurar(dto);
