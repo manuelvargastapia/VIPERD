@@ -153,7 +153,6 @@ public final class DaoHTTPJson implements IDAO {
     private synchronized void mapearRespuesta(String datos, IRespuesta respuesta, String operacion, String fuente) {
         if (respuesta == null) {return;}
         TRAZADOR.info("operacion=" + operacion + ", fuente=" + fuente);
-        //TRAZADOR.info(datos);
         List<Map<String, String>> lista = new ArrayList<>();
         Map<String, String> caso;
         if(!datos.isEmpty() && !datos.equals("[]")) {

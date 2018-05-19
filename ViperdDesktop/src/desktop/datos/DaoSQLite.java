@@ -51,8 +51,8 @@ public final class DaoSQLite implements IDAO {
         String expresion = "";
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
-            TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
+                TRAZADOR.info(expresion);
                 Statement instruccion = bd.createStatement();
                 ResultSet datos = instruccion.executeQuery(expresion);
                 mapearRespuesta(datos, dto.getRespuesta(), dto.getPeticion().getOperacion());
@@ -79,17 +79,18 @@ public final class DaoSQLite implements IDAO {
         String uid = "";
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
-            TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
+                TRAZADOR.info(expresion);
                 Statement instruccion = bd.createStatement();
-                int total = instruccion.executeUpdate(expresion, Statement.RETURN_GENERATED_KEYS);
+                int total = instruccion.executeUpdate(expresion);
                 dto.getRespuesta().setCuentaCasos(total);
                 if (total >0) {
                     dto.getRespuesta().setEstado("1");
-                    ResultSet resultados = instruccion.getGeneratedKeys();
+                    ResultSet resultados = bd.createStatement().executeQuery("SELECT last_insert_rowid()");
                     if (resultados.next()) {
-                        uid = resultados.getObject(1).toString();
-                    }
+                        Long aux = resultados.getLong(1);
+                        uid = aux.toString();
+                    }                    
                     resultados.close();
                     if (!uid.isEmpty()) {
                         List<Map<String, String>> resultado = new ArrayList<>();
@@ -117,15 +118,15 @@ public final class DaoSQLite implements IDAO {
             try {if (null != bd) {bd.close();}}
             catch (SQLException e) {TRAZADOR.info(e.getMessage());}
         }
-        TRAZADOR.info(expresion + " (UID=" + uid + ") - " + dto.getRespuesta().respuestaToString());
+        TRAZADOR.info("UID=" + uid + " - " + dto.getRespuesta().respuestaToString());
     }
     @Override public void Editar(IDTO dto) {
         String expresion = "";
         Integer total = 0;
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
-            TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
+                TRAZADOR.info(expresion);
                 Statement instruccion = bd.createStatement();
                 total = instruccion.executeUpdate(expresion);
                 dto.getRespuesta().setCuentaCasos(total);
@@ -150,15 +151,15 @@ public final class DaoSQLite implements IDAO {
             try {if (null != bd) {bd.close();}}
             catch (SQLException e) {TRAZADOR.info(e.getMessage());}
         }
-        TRAZADOR.info(expresion + " (filas=" + total.toString() + ")");
+        TRAZADOR.info("filas=" + total.toString());
     }
     @Override public void Borrar(IDTO dto) {
         String expresion = "";
         Integer total= 0;
         try {
             expresion = generarExpresion(dto.getPeticion().getComando(), dto.getPeticion().getParametros());
-            TRAZADOR.info(expresion);
             if (!expresion.isEmpty()) {
+                TRAZADOR.info(expresion);
                 Statement instruccion = bd.createStatement();
                 total = instruccion.executeUpdate(expresion);
                 dto.getRespuesta().setCuentaCasos(total);
@@ -183,7 +184,7 @@ public final class DaoSQLite implements IDAO {
             try {if (null != bd) {bd.close();}}
             catch (SQLException e) {TRAZADOR.info(e.getMessage());}
         }
-        TRAZADOR.info(expresion + " (filas=" + total.toString() + ")");
+        TRAZADOR.info("filas=" + total.toString());
     }
     
     //FUNCIONES PRIVADAS
