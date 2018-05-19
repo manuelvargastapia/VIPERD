@@ -28,9 +28,10 @@ public class InteractorUsuarios extends Interactor {
     //IMPLEMENTACION DE INTERFACE "IInteractor"
     @Override protected void ejecutarCasoDeUso(IDTO dto) {
         TRAZADOR.info(dto.getCasoDeUso().toString());
-        IEntidad usuario = new Usuario();
+        IEntidad usuario;
         switch ((CASODEUSO) dto.getCasoDeUso()) {
             case CONSULTAR_SESION:
+                usuario = new Usuario();
                 if (this.validarParametros(dto, usuario, "P")) {
                     this.prepararOperacion(dto, usuario, "ObtenerSesion");
                     dto.getAgente().Seleccionar(dto);
@@ -38,11 +39,13 @@ public class InteractorUsuarios extends Interactor {
                 }
                 break;
             case CONSULTAR_USUARIOS:
+                usuario = new Usuario();
                 this.prepararOperacion(dto, usuario, "ListaUsuarios");
                 dto.getAgente().Seleccionar(dto);
                 this.procesarRespuesta(dto, usuario, "L");
                 break;
             case CONSULTAR_USUARIO:
+                usuario = new Usuario();
                 this.validarParametros(dto, usuario, "C");
                 this.prepararOperacion(dto, usuario, "SeleccionarUsuario");
                 dto.getAgente().Seleccionar(dto);

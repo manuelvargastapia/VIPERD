@@ -40,7 +40,8 @@ public class AgenteUsuarios extends Agente {
 
     //DEFINICION DE OPERACIONES
     protected enum OPERACION implements IOperacion {
-        ObtenerSesion("HTTPJson", "app.php?op=autenticar&us=[login]&pw=[password]", "caso"),
+        //ObtenerSesion("HTTPJson", "app.php?op=autenticar&us=[login]&pw=[password]", "caso"),
+        ObtenerSesion("SQLite", "SELECT id, login AS usuario, alias, roles FROM app_usuarios WHERE login='[login]' AND clave='[password]' AND estado='1'", ""),
         SeleccionarUsuario("SQLite", "SELECT", "app_usuarios"),
         AgregarUsuario("SQLite", "INSERT", "app_usuarios"),
         EditarUsuario("SQLite", "UPDATE", "app_usuarios"),
