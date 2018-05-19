@@ -26,11 +26,14 @@ public class ${name} extends Agente {
             this.fuente = OPERACION.valueOf(this.operacion).Fuente();
         } catch (Exception e) {TRAZADOR.info(e.getMessage());}
         switch (this.origen) {
-            case "HTTPJson":
-                this.dao = DaoHTTPJson.Activar("http://localhost/aplicacion/", "", "");
+            case "SQLite":
+                this.dao = DaoSQLite.Activar("bd//bd.sqlite", "", "");
                 break;
             case "MySql":
-                this.dao = DaoMySql.Activar("jdbc:mysql://localhost/bd_app", "usuario", "12345");
+                this.dao = DaoMySql.Activar("localhost/bd_app", "usuario", "12345");
+                break;
+            case "HTTPJson":
+                this.dao = DaoHTTPJson.Activar("http://localhost/aplicacion/", "", "");
                 break;
         }
         Configurar(dto);
@@ -38,11 +41,11 @@ public class ${name} extends Agente {
 
     //DEFINICION DE OPERACIONES
     protected enum OPERACION implements IOperacion {
-        Seleccionar${name}("MySql", "SELECT", "tabla_bd"),
-        Editar${name}("MySql", "UPDATE", "tabla_bd"),
-        Borrar${name}("MySql", "DELETE", "tabla_bd"),
-        Agregar${name}("MySql", "INSERT", "tabla_bd"),
-        Lista${name}("MySql", "LISTADO", "tabla_bd"),
+        Seleccionar${name}("SQLite", "SELECT", "tabla_bd"),
+        Editar${name}("SQLite", "UPDATE", "tabla_bd"),
+        Borrar${name}("SQLite", "DELETE", "tabla_bd"),
+        Agregar${name}("SQLite", "INSERT", "tabla_bd"),
+        Lista${name}("SQLite", "LISTADO", "tabla_bd"),
         ;
         private final String comando, origen, fuente;
         OPERACION(String origen, String comando, String fuente) {this.comando = comando; this.origen = origen; this.fuente = fuente;}
