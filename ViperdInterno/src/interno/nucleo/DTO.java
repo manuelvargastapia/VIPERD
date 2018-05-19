@@ -18,9 +18,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 //CLASE DTO
 public final class DTO implements IDTO {
+    protected final static Logger TRAZADOR = Logger.getLogger(DTO.class.getName());
     
     private IPeticion peticion;
     private IRespuesta respuesta;

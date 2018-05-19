@@ -18,11 +18,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 //SUPERCLASE ABSTRACTA Entidad
 public abstract class Entidad implements IEntidad {
+    protected final static Logger TRAZADOR = Logger.getLogger(Entidad.class.getName());
     
     private Map<String, IValueObject> estructura;
     private Map<String, String> atributos, mensajes;
@@ -163,32 +165,48 @@ public abstract class Entidad implements IEntidad {
         for (IValueObject item: this.estructura.values()) {
             v = item.get("v");
             d = item.get("d");
+            valor = "";
+            nombre = "";
             Boolean resultado_item = true;
-            if (!filtro.isEmpty() && item.get("filtro").contains(filtro) && ((!d.isEmpty() && destino.equalsIgnoreCase("D")) || (!v.isEmpty() && destino.equalsIgnoreCase("V")))) {
-                nombre = item.get("nombre");
+            if (
+                !filtro.isEmpty() && 
+                (item.get("filtro").contains(filtro) || item.get("filtro").contains("C")) && 
+                    (
+                    (!d.isEmpty() && destino.equalsIgnoreCase("D")) || 
+                    (!v.isEmpty() && destino.equalsIgnoreCase("V"))
+                    )
+                ) {
                 regla = item.get("regla");
-                if (destino.equalsIgnoreCase("V")) {valor = textoNoNulo(datos.get(d));} 
-                else {valor = textoNoNulo(datos.get(v));}
-                if (!regla.isEmpty()) {
+                if (destino.equalsIgnoreCase("D")) {
+                    nombre = d;
+                    valor = textoNoNulo(datos.get(v));
+                } else if (destino.equalsIgnoreCase("V")) {
+                    nombre = v;
+                    valor = textoNoNulo(datos.get(d));
+                }
+                if (!regla.isEmpty() && !item.get("filtro").contains("C")) {
                     if (evaluar) {resultado_item = this.validar(item, valor);}
                     if (resultado_item) {valor = cambiarFormato(regla, valor, destino);}
                     else {this.estado = false;}
                 }
-                if (resultado_item && !d.isEmpty()) {
-                    if (destino.equalsIgnoreCase("V")) {temporal.put(v, valor);}
-                    else {temporal.put(d, valor);}
-                    this.set(nombre, valor);
+                if (resultado_item && !nombre.isEmpty()) {
+                    temporal.put(nombre, valor);
+                    this.set(item.get("nombre"), valor);
+                    //TRAZADOR.info("dato: " + nombre + " = " + valor);
                 }
             }
         }
         if (this.estado) {
             int cuenta = 0;
-            for (Map.Entry<String, IValueObject> item: this.estructura.entrySet()) {
-                nombre = item.getKey();
-                IValueObject definicion = item.getValue();
+            for (Map.Entry<String, IValueObject> atributo: this.estructura.entrySet()) {
+                IValueObject item = atributo.getValue();
+                if (destino.equalsIgnoreCase("V")) {nombre = item.get("d");}
+                else {nombre = item.get("v");}
+                valor = textoNoNulo(datos.get(nombre));
                 if (datos.containsKey(nombre)) {
-                    if (definicion.get("filtro").contains("A")) {
-                        this.atributos.put(nombre, datos.get(nombre));
+                    if (item.get("filtro").contains("A")) {
+                        this.atributos.put(atributo.getKey(), valor);
+                        //TRAZADOR.info("atributo: " + atributo.getKey() + " = " + valor);
                         cuenta++;
                     }
                 }
