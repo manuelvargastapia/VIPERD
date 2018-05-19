@@ -40,7 +40,7 @@ public final class DaoMySql implements IDAO {
         if (instancia == null) {instancia = new DaoMySql();}
         db.setUsername(usuario);
         db.setPassword(password);
-        db.setUrl(url);
+        db.setUrl("jdbc:mysql://" + url);
         return instancia;
     }
 
