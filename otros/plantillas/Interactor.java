@@ -41,60 +41,77 @@ public class ${name} extends Interactor {
            clase "Entidad" que implementa la interface "IEntidad". */
 
         /* EJEMPLOS DE USO DE OPERACIONES (supone que existe una Entidad de 
-           Dominio llamada "Persona" definida en una clase con ese nombre,
-           y que en el DAO a usar existen las operaciones: ListaPersonas, 
-           LeerPersona, EditarPersona, AgregarPersona y BorrarPersona.
-            //1-Listar personas (supone que existe una Entidad "Persona"):
-                IEntidad entidad = new Persona();
-                this.prepararOperacion(dto, entidad, "ListaPersonas");
-                dto.getAgente().Seleccionar(dto);
-                this.procesarRespuesta(dto, entidad, "L");
-            //2-Leer una Persona a partir de su ID:
-                IEntidad entidad = new Persona();
-                entidad.set("id", "1");
-                this.prepararOperacion(dto, entidad, "LeerPersona");
-                dto.getAgente().Seleccionar(dto);
-                this.procesarRespuesta(dto, entidad, "R");
-                TRAZADOR.info("LEIDO - " + entidad.entidadToString());
-            //3-Editar una Persona a partir de su ID:
-                IEntidad entidad = new Persona();
-                entidad.set("id", "1");
-                dto.setElemento("nombre", "Juan Gonzalez");
-                dto.setElemento("email", "juangonzalez@correo.com");
-                if (this.validarParametros(dto, entidad, "U")) {
-                    this.prepararOperacion(dto, entidad, "EditarPersona");
-                    dto.getAgente().Editar(dto);
-                    this.procesarRespuesta(dto, entidad, "");
-                    TRAZADOR.info("EDITADO - " + entidad.entidadToString());
-                }
-            //4-Crear una Persona y obtener su ID:
-                IEntidad entidad = new Persona();
+           Dominio llamada "Usuario" definida en una clase con ese nombre,
+           y que en el DAO a usar existen las operaciones: AgregarUsuario, 
+           SeleccionarUsuario, EditarUsuario, BorrarUsuario y ListaUsuarios.
+
+                IEntidad usuario = new Usuario();
+                String uid = "";
+
+                //AGREGAR USUARIO
+                TRAZADOR.info("----------AGREGAR USUARIO----------");
+                dto.getPeticion().Limpiar();
                 dto.setElemento("alias", "Juan Gonzalez");
                 dto.setElemento("email", "juangonzalez@correo.com");
-                if (this.validarParametros(dto, entidad, "I")) {
-                    this.prepararOperacion(dto, entidad, "AgregarPersona");
+                dto.setElemento("login", "jgonzalez");
+                if (this.validarParametros(dto, usuario, "I")) {
+                    this.prepararOperacion(dto, usuario, "AgregarUsuario");
                     dto.getAgente().Agregar(dto);
-                    this.procesarRespuesta(dto, entidad, "C");
-                    TRAZADOR.info("AGREGADO: " + entidad.entidadToString());
-                    TRAZADOR.info("ID = " + entidad.get("id"));
+                    this.procesarRespuesta(dto, usuario, "C");
+                    uid = usuario.get("id");
+                    TRAZADOR.info("AGREGADO ID = " + uid + " - " + usuario.entidadToString());
                 }
-            //5-Borrar una Persona a partir de su ID:
-                IEntidad entidad = new Persona();
-                entidad.set("id", "1");
-                this.prepararOperacion(dto, entidad, "BorrarPersona");
-                dto.getAgente().Borrar(dto);
-                this.procesarRespuesta(dto, entidad, "X");
-                TRAZADOR.info("BORRADO: " + entidad.entidadToString());
-                */
+                
+                //LEER USUARIO
+                TRAZADOR.info("----------LEER USUARIO----------");
+                dto.getPeticion().Limpiar();
+                dto.setElemento("uid", uid);
+                this.validarParametros(dto, usuario, "C");
+                this.prepararOperacion(dto, usuario, "SeleccionarUsuario");
+                dto.getAgente().Seleccionar(dto);
+                this.procesarRespuesta(dto, usuario, "S");
+                TRAZADOR.info("LEIDO - " + usuario.entidadToString());
+                
+                //EDITAR USUARIO
+                TRAZADOR.info("----------EDITAR USUARIO----------");
+                dto.getPeticion().Limpiar();
+                dto.setElemento("uid", uid);
+                dto.setElemento("email", "jgonzalezp@correo.com");
+                dto.setElemento("alias", "Juan Antonio Gonzalez");
+                if (this.validarParametros(dto, usuario, "U")) {
+                    this.prepararOperacion(dto, usuario, "EditarUsuario");
+                    dto.getAgente().Editar(dto);
+                    this.procesarRespuesta(dto, usuario, "");
+                    TRAZADOR.info("EDITADO - " + usuario.entidadToString());
+                }
 
+                //BORRAR USUARIO
+                TRAZADOR.info("----------BORRAR USUARIO----------");
+                dto.getPeticion().Limpiar();
+                dto.setElemento("uid", uid);
+                this.validarParametros(dto, usuario, "C");
+                this.prepararOperacion(dto, usuario, "BorrarUsuario");
+                dto.getAgente().Borrar(dto);
+                this.procesarRespuesta(dto, usuario, "X");
+                TRAZADOR.info("BORRADO: " + usuario.entidadToString());
+
+                //LISTA DE USUARIOS
+                TRAZADOR.info("----------LISTA DE USUARIOS----------");
+                dto.getPeticion().Limpiar();
+                this.prepararOperacion(dto, usuario, "ListaUsuarios");
+                dto.getAgente().Seleccionar(dto);
+                this.procesarRespuesta(dto, usuario, "L");
+
+        */
         /* EJEMPLOS DE USO DE FUNCIONES:
-            IEntidad entidad = new Persona();
+            IEntidad usuario = new Usuario();
             //1-Funciones incorporadas:
-                float resultado = entidad.Calcular(Entidad.CALCULO.PrecioBrutoDesdeNeto, new float[]{75000});
-                float resultado = entidad.Calcular(Entidad.CALCULO.HonBrutoDesdeNeto, new float[]{250000});
-            //2-Funciones personalizadas definidas en la clase "Persona":
-                float resultado = entidad.Calcular(Persona.CALCULO.Personalizado, new float[]{5});
-            */
+                float resultado = usuario.Calcular(Entidad.CALCULO.PrecioBrutoDesdeNeto, new float[]{75000});
+                float resultado = usuario.Calcular(Entidad.CALCULO.HonBrutoDesdeNeto, new float[]{250000});
+            //2-Funciones personalizadas definidas en la clase "Usuario":
+                float resultado = usuario.Calcular(Usuario.CALCULO.Personalizado, new float[]{5});
+        */
+
         }
         this.entregarResultado(dto);
     }
