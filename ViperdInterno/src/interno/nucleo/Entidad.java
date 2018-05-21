@@ -13,9 +13,7 @@ import interno.nucleo.Interfaces.IValueObject;
 import interno.nucleo.Interfaces.IEstructura;
 import interno.nucleo.Interfaces.ICalculo;
 import interno.nucleo.Interfaces.IRegla;
-import interno.nucleo.Funciones;
 
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -27,7 +25,7 @@ public abstract class Entidad implements IEntidad {
     protected final static Logger TRAZADOR = Logger.getLogger(Entidad.class.getName());
     
     private Map<String, IValueObject> estructura;
-    private Map<String, String> atributos, mensajes;
+    private Map<String, String> atributos, validaciones;
     private Calculadora calculadora;
     private Boolean estado;
 
@@ -71,7 +69,7 @@ public abstract class Entidad implements IEntidad {
     protected <V extends Enum<V> & IEstructura> Entidad(Class<V> configuracion) {
         this.atributos = new LinkedHashMap<>();
         this.estructura = new LinkedHashMap<>();
-        this.mensajes = new LinkedHashMap<>();
+        this.validaciones = new LinkedHashMap<>();
         this.estado = false;
         this.calculadora = new Calculadora();
         for (V item: (V[])configuracion.getEnumConstants()) {
@@ -146,7 +144,7 @@ public abstract class Entidad implements IEntidad {
     }
     @Override public Map<String, String> getAtributos() {return this.atributos;}
     @Override public Boolean getEstado() {return this.estado;}
-    @Override public Map<String, String> getMensajes() {return this.mensajes;}
+    @Override public Map<String, String> getValidaciones() {return this.validaciones;}
     @Override public String getEntidad() {return this.getClass().getSimpleName();}
     @Override public Map<String, IValueObject> getEstructura() {
         return this.estructura;
@@ -226,7 +224,7 @@ public abstract class Entidad implements IEntidad {
                 this.atributos.put(nombre, "");
             }
         }
-        this.mensajes.clear();
+        this.validaciones.clear();
         this.estado = false;
     }
     @Override public String entidadToString() {
@@ -238,11 +236,11 @@ public abstract class Entidad implements IEntidad {
         str.append("\n");
         return str.toString();
     }
-    @Override public String mensajesToString() {
+    @Override public String validacionesToString() {
         StringBuilder str = new StringBuilder();
-        str.append("MENSAJES (").append(this.mensajes.size()).append("):\n");
-        for (Map.Entry<String, String> mensaje: this.mensajes.entrySet()) {
-            str.append(mensaje.getKey()).append(": ").append(mensaje.getValue()).append("\n");
+        str.append("VALIDACIONES (").append(this.validaciones.size()).append("):\n");
+        for (Map.Entry<String, String> validacion: this.validaciones.entrySet()) {
+            str.append(validacion.getKey()).append(": ").append(validacion.getValue()).append("\n");
         }
         str.append("\n");
         return str.toString();
@@ -270,20 +268,20 @@ public abstract class Entidad implements IEntidad {
             String expreg = REGLA.valueOf(regla).ExpRegular();
             if (min >0 || max >0) {
                 if (!evaluarMinMax(valor, min, max, regla)) {
-                    this.mensajes.put("ERROR-MINMAX-" + nombre, Funciones.reemplazarTexto(Funciones.reemplazarTexto(item.get("e2"), "[min]", min.toString()), "[max]", max.toString()));
+                    this.validaciones.put("ERROR-MINMAX-" + nombre, Funciones.reemplazarTexto(Funciones.reemplazarTexto(item.get("e2"), "[min]", min.toString()), "[max]", max.toString()));
                     resultado = false;
                 }
                 if (!inclus.isEmpty() && !evaluarInclusion(valor, inclus)) {
-                    this.mensajes.put("ERROR-INCLUS-" + nombre, item.get("e1"));
+                    this.validaciones.put("ERROR-INCLUS-" + nombre, item.get("e1"));
                     resultado = false;
                 }
                 if (!expreg.isEmpty() && !evaluarExpRegular(valor, expreg)) {
-                    this.mensajes.put("ERROR-EXPREG-" + nombre, item.get("e3"));
+                    this.validaciones.put("ERROR-EXPREG-" + nombre, item.get("e3"));
                     resultado = false;
                 }
                 if (regla.equalsIgnoreCase("RUT")) {
                     if (!evaluarRUT(valor)) {
-                        this.mensajes.put("ERROR-RUT-" + nombre, item.get("e3"));
+                        this.validaciones.put("ERROR-RUT-" + nombre, item.get("e3"));
                         resultado = false;
                     }
                 }

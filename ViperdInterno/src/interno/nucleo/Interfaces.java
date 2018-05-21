@@ -46,10 +46,10 @@ public interface Interfaces {
         String getEntidad();
         Map<String, IValueObject> getEstructura();
         Boolean getEstado();
-        Map<String, String> getMensajes();
+        Map<String, String> getValidaciones();
         Float Calcular(ICalculo calculo, float[] valor);
         Map<String, String> TransformarDatos(Map<String, String> datos, String destino, String filtro, Boolean evaluar);
-        String mensajesToString();
+        String validacionesToString();
         String entidadToString();
         String entidadToJson();
         void Vaciar();

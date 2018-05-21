@@ -57,7 +57,7 @@ public abstract class Interactor implements IInteractor {
             dto.getPeticion().setParametros(parametros);
         } else {
             dto.setEstado(false);
-            dto.agregarMensajes(entidad.getMensajes());
+            dto.agregarMensajes(entidad.getValidaciones());
         }
         TRAZADOR.info("Resultado: " + entidad.getEstado().toString());
         return entidad.getEstado();
