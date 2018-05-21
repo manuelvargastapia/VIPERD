@@ -102,7 +102,7 @@ public interface Interfaces {
         void setEstructura(Map<String, IValueObject> estructura);
         Map<String, IValueObject> getEstructura();
         void Limpiar();
-        String parametrosToString();
+        String toString();
     }
     interface IRespuesta {
         Map<String, List<Map<String, String>>> getDatos();
@@ -119,7 +119,7 @@ public interface Interfaces {
         String getMensaje();
         void setMensaje(String mensaje);
         void Limpiar();
-        String respuestaToString();
+        String toString();
     }
     interface IValueObject {
         String get(String nombre);

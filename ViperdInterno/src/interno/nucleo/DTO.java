@@ -168,7 +168,7 @@ public final class DTO implements IDTO {
             this.comando = "";
             this.operacion = "";
         }
-        @Override public String parametrosToString() {
+        @Override public String toString() {
             StringBuilder str = new StringBuilder();
             str.append("PETICION:\n| ");
             for (Map.Entry<String, String> parametro: this.parametros.entrySet()) {
@@ -241,7 +241,7 @@ public final class DTO implements IDTO {
             this.cuenta = 0;
             this.datos.clear();
         }
-        @Override public String respuestaToString() {
+        @Override public String toString() {
             StringBuilder str = new StringBuilder();
             str.append("estado=").append(this.estado).append(", mensaje=").append(this.mensaje).append("\n");
             for (Map.Entry<String, List<Map<String,String>>> lista: this.datos.entrySet()) {

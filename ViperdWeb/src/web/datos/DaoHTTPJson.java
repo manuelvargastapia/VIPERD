@@ -193,6 +193,6 @@ public final class DaoHTTPJson implements IDAO {
             respuesta.setMensaje("NO se pudo conectar con el servicio");
             respuesta.setListado(lista, operacion);
         }
-        TRAZADOR.info(respuesta.respuestaToString());
+        TRAZADOR.info(respuesta.toString());
     }
 }

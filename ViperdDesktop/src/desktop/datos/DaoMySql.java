@@ -122,7 +122,7 @@ public final class DaoMySql implements IDAO {
             try {if (null != bd) {bd.close();}}
             catch (SQLException e) {TRAZADOR.info(e.getMessage());}
         }
-        TRAZADOR.info("UID=" + uid + " - " + dto.getRespuesta().respuestaToString());
+        TRAZADOR.info("UID=" + uid + " - " + dto.getRespuesta().toString());
     }
     @Override public void Editar(IDTO dto) {
         Connection bd = null;
@@ -234,6 +234,6 @@ public final class DaoMySql implements IDAO {
         }
         respuesta.setCuentaCasos(cuenta);
         respuesta.setListado(resultado, operacion);
-        TRAZADOR.info(respuesta.respuestaToString());
+        TRAZADOR.info(respuesta.toString());
     }
 }

@@ -118,7 +118,7 @@ public final class DaoSQLite implements IDAO {
             try {if (null != bd) {bd.close();}}
             catch (SQLException e) {TRAZADOR.info(e.getMessage());}
         }
-        TRAZADOR.info("UID=" + uid + " - " + dto.getRespuesta().respuestaToString());
+        TRAZADOR.info("UID=" + uid + " - " + dto.getRespuesta().toString());
     }
     @Override public void Editar(IDTO dto) {
         String expresion = "";
@@ -223,6 +223,6 @@ public final class DaoSQLite implements IDAO {
         }
         respuesta.setCuentaCasos(cuenta);
         respuesta.setListado(resultado, operacion);
-        TRAZADOR.info(respuesta.respuestaToString());
+        TRAZADOR.info(respuesta.toString());
     }
 }

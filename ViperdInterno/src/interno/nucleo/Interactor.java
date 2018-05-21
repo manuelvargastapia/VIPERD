@@ -79,11 +79,11 @@ public abstract class Interactor implements IInteractor {
             dto.agregarMensaje(codigo, mensaje);
         }
         if (resultado) {
-            Map<String, List<Map<String, String>>> conjunto = new LinkedHashMap<>();
+            Map<String, List<Map<String, String>>> conjuntos = new LinkedHashMap<>();
             int total_listas = dto.getRespuesta().getOperaciones().length;
             int lista_actual = 0;
             for (Map.Entry<String, List<Map<String,String>>> lista: dto.getRespuesta().getDatos().entrySet()) {
-                List<Map<String, String>> elemento = new ArrayList<>();
+                List<Map<String, String>> conjunto = new ArrayList<>();
                 lista_actual++;
                 String operacion = lista.getKey();
                 int total_casos = dto.getRespuesta().getFilasListado(operacion);
@@ -91,7 +91,7 @@ public abstract class Interactor implements IInteractor {
                     for (Map<String, String> caso: lista.getValue()) {
                         Map<String, String> temporal = entidad.TransformarDatos(caso, "V", filtro, false);
                         if (entidad.getEstado()) {
-                            elemento.add(temporal);
+                            conjunto.add(temporal);
                             if (lista_actual == 1 && total_casos == 1 && temporal.size()>1) {
                                 for (Map.Entry<String, String> atributo: temporal.entrySet()) {
                                     dto.setElemento(atributo.getKey(), atributo.getValue());
@@ -99,13 +99,13 @@ public abstract class Interactor implements IInteractor {
                             }
                         }
                     }
-                    conjunto.put(operacion, elemento);
+                    conjuntos.put(operacion, conjunto);
                 } else {
                     //TODO: Revisar
                     if (lista_actual == 1) {entidad.setAtributos(null);}
                 }
             }
-            dto.setConjuntos(conjunto);
+            dto.setConjuntos(conjuntos);
             if (filtro.equalsIgnoreCase("X") && dto.getRespuesta().getCuentaCasos()==1) {
                 //TODO: Revisar
                 entidad.Vaciar();
