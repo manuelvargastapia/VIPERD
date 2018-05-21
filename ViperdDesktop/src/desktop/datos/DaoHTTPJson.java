@@ -8,11 +8,11 @@ package desktop.datos;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. */
 
-import interno.datos.Agente;
 import interno.nucleo.Interfaces.IDAO;
 import interno.nucleo.Interfaces.IDTO;
 import interno.nucleo.Interfaces.IPeticion;
 import interno.nucleo.Interfaces.IRespuesta;
+import interno.nucleo.Funciones;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -78,7 +78,7 @@ public final class DaoHTTPJson implements IDAO {
         else {cadena = expresion.toString();}
         if (parametros != null && parametros.size()>0 && cadena.contains("[")) {
             for (Map.Entry<String, String> parametro : parametros.entrySet()) {
-                cadena = Agente.reemplazarTexto(cadena, "[" + parametro.getKey() + "]", URLEncoder.encode(parametro.getValue(), "UTF-8"));
+                cadena = Funciones.reemplazarTexto(cadena, "[" + parametro.getKey() + "]", URLEncoder.encode(parametro.getValue(), "UTF-8"));
             }
         }
         return cadena;
@@ -111,7 +111,7 @@ public final class DaoHTTPJson implements IDAO {
         HttpURLConnection con = null;
         BufferedReader reader = null;
         StringBuilder resultado = new StringBuilder();
-        String argumentos = Agente.reemplazarTexto(generarArgumentos(expresion, parametros), "[json]", convertirParametrosEnJSON(parametros, true));
+        String argumentos = Funciones.reemplazarTexto(generarArgumentos(expresion, parametros), "[json]", convertirParametrosEnJSON(parametros, true));
         String dir = resolverDireccion(expresion);
         TRAZADOR.info("URL: " + dir);
         TRAZADOR.info("Argumentos: " + argumentos);

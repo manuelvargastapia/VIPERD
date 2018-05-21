@@ -12,6 +12,7 @@ import interno.nucleo.Interfaces.IDAO;
 import interno.nucleo.Interfaces.IDTO;
 import interno.nucleo.Interfaces.IPeticion;
 import interno.nucleo.Interfaces.IRespuesta;
+import interno.nucleo.Funciones;
 
 import java.util.logging.Logger;
 

@@ -8,10 +8,10 @@ package desktop.datos;
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. */
 
-import interno.datos.Agente;
 import interno.nucleo.Interfaces.IDAO;
 import interno.nucleo.Interfaces.IDTO;
 import interno.nucleo.Interfaces.IRespuesta;
+import interno.nucleo.Funciones;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -201,7 +201,7 @@ public final class DaoMySql implements IDAO {
         if (cadena.contains("[")) {
             for (Map.Entry<String, String> parametro: parametros.entrySet()) {
                 try {
-                    cadena = Agente.reemplazarTexto(cadena, "[" + parametro.getKey() + "]", Agente.reemplazarComillas(parametro.getValue()));
+                    cadena = Funciones.reemplazarTexto(cadena, "[" + parametro.getKey() + "]", Funciones.reemplazarComillas(parametro.getValue()));
                 } catch (Exception e) {TRAZADOR.info(e.getMessage());}
             }
         }

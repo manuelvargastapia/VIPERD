@@ -13,8 +13,8 @@ import interno.nucleo.Interfaces.IValueObject;
 import interno.nucleo.Interfaces.IEstructura;
 import interno.nucleo.Interfaces.ICalculo;
 import interno.nucleo.Interfaces.IRegla;
+import interno.nucleo.Funciones;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -179,10 +179,10 @@ public abstract class Entidad implements IEntidad {
                 regla = item.get("regla");
                 if (destino.equalsIgnoreCase("D")) {
                     nombre = d;
-                    valor = textoNoNulo(datos.get(v));
+                    valor = Funciones.textoNoNulo(datos.get(v));
                 } else if (destino.equalsIgnoreCase("V")) {
                     nombre = v;
-                    valor = textoNoNulo(datos.get(d));
+                    valor = Funciones.textoNoNulo(datos.get(d));
                 }
                 if (!regla.isEmpty() && !item.get("filtro").contains("C")) {
                     if (evaluar) {resultado_item = this.validar(item, valor);}
@@ -202,7 +202,7 @@ public abstract class Entidad implements IEntidad {
                 IValueObject item = atributo.getValue();
                 if (destino.equalsIgnoreCase("V")) {nombre = item.get("d");}
                 else {nombre = item.get("v");}
-                valor = textoNoNulo(datos.get(nombre));
+                valor = Funciones.textoNoNulo(datos.get(nombre));
                 if (datos.containsKey(nombre)) {
                     if (item.get("filtro").contains("A")) {
                         this.atributos.put(atributo.getKey(), valor);
@@ -264,13 +264,13 @@ public abstract class Entidad implements IEntidad {
         String regla = item.get("regla");
         String nombre = item.get("nombre");
         if (!regla.isEmpty()) {
-            Integer min = enteroNoNulo(item.get("min"));
-            Integer max = enteroNoNulo(item.get("max"));
+            Integer min = Funciones.enteroNoNulo(item.get("min"));
+            Integer max = Funciones.enteroNoNulo(item.get("max"));
             String inclus = REGLA.valueOf(regla).Inclusion();
             String expreg = REGLA.valueOf(regla).ExpRegular();
             if (min >0 || max >0) {
                 if (!evaluarMinMax(valor, min, max, regla)) {
-                    this.mensajes.put("ERROR-MINMAX-" + nombre, reemplazarTexto(reemplazarTexto(item.get("e2"), "[min]", min.toString()), "[max]", max.toString()));
+                    this.mensajes.put("ERROR-MINMAX-" + nombre, Funciones.reemplazarTexto(Funciones.reemplazarTexto(item.get("e2"), "[min]", min.toString()), "[max]", max.toString()));
                     resultado = false;
                 }
                 if (!inclus.isEmpty() && !evaluarInclusion(valor, inclus)) {
@@ -299,81 +299,22 @@ public abstract class Entidad implements IEntidad {
             if (!fv.isEmpty() && !fd.isEmpty()) {
                 if (regla.equalsIgnoreCase("FECHA") || regla.equalsIgnoreCase("HORA")) {
                     switch (destino) {
-                        case "D": valor = convertirFechaHora(valor, fv, fd);break;
-                        case "V": valor = convertirFechaHora(valor, fd, fv); break;
+                        case "D": valor = Funciones.convertirFechaHora(valor, fv, fd);break;
+                        case "V": valor = Funciones.convertirFechaHora(valor, fd, fv); break;
                     }
                 }
             }
         }
         return valor.toString();
     }
-    private String textoNoNulo(String valor) {
-        String cadena = "";
-        if (valor != null) {
-            cadena = valor;
-        }
-        if (cadena.equalsIgnoreCase("null")) {
-            cadena = "";
-        }
-        return cadena;
-    }
-    private String reemplazarTexto(String cadena, String buscar, String reemplazar) {
-        StringBuilder sb = null;
-        int start = 0;
-        for (int i; (i = cadena.indexOf(buscar, start)) != -1;) {
-            if (sb == null) {
-                sb = new StringBuilder();
-            }
-            sb.append(cadena, start, i);
-            sb.append(reemplazar);
-            start = i + buscar.length();
-        }
-        if (sb == null) {
-            return cadena;
-        }
-        sb.append(cadena, start, cadena.length());
-        return sb.toString();
-    }
-    private String convertirFechaHora(String valor, String ini, String fin) {
-        String resultado = valor;
-        SimpleDateFormat df;
-        SimpleDateFormat di;
-        Date fe;
-        try {
-            if (valor.equalsIgnoreCase("ahora")) {
-                df = new SimpleDateFormat(fin);
-                resultado = df.format(new Date());
-            } else if (valor.length() > 0) {
-                di = new SimpleDateFormat(ini);
-                df = new SimpleDateFormat(fin);
-                fe = di.parse(valor);
-                resultado = df.format(fe);
-            }
-        } catch (Exception e) {}
-        return resultado;
-    }
-    private Integer enteroNoNulo(String valor) {
-        Integer numero = 0;
-        if (valor.length() > 0) {
-            for (int i = 0; i < valor.length(); i++) {
-                if (!Character.isDigit(valor.charAt(i))) {
-                    return numero;
-                }
-            }
-            try {
-                numero = Integer.parseInt(valor);
-            } catch (Exception e) {}
-        }
-        return numero;
-    }
     private boolean evaluarMinMax(String valor, Integer minimo, Integer maximo, String regla) {
         boolean resultado;
         if (null == valor) {valor = "";}
         if (regla.equals("ENTERO") || regla.equals("ID")) {
-            Integer largo = enteroNoNulo(valor);
+            Integer largo = Funciones.enteroNoNulo(valor);
             resultado = (largo <= maximo && largo >= minimo);
         } else {
-            Integer largo2 = (textoNoNulo(valor)).length();
+            Integer largo2 = (Funciones.textoNoNulo(valor)).length();
             resultado = (largo2 <= maximo && largo2 >= minimo);
         }
         return resultado;
@@ -470,7 +411,7 @@ public abstract class Entidad implements IEntidad {
                 case "etiqueta": valor = this.etiqueta; break;
                 case "tipo": valor = this.tipo; break;
             }
-            return textoNoNulo(valor);
+            return Funciones.textoNoNulo(valor);
         }
     }
 }

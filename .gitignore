@@ -12,3 +12,15 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/PruebaDesktop/nbproject/private/
+/PruebaWeb/nbproject/private/
+/ViperdDesktop/nbproject/private/
+/ViperdWeb/nbproject/private/
+/ViperdInterno/nbproject/private/
+/ViperdInterno/build/
+/ViperdDesktop/build/
+/ViperdWeb/build/
+/PruebaWeb/build/
+/PruebaWeb/dist/
+/PruebaDesktop/build/
+/PruebaDesktop/dist/
