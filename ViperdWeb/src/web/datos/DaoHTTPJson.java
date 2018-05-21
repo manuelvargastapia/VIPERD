@@ -50,6 +50,9 @@ public final class DaoHTTPJson implements IDAO {
     @Override public void Conectar(IDTO dto) {
         //No implementada
     }
+    @Override public void Conectar(String origen) {
+        //No implementada
+    }
     @Override public void Seleccionar(IDTO dto) {
         TRAZADOR.info("");
         try {ejecutarPeticion(dto.getPeticion(), dto.getRespuesta());} 

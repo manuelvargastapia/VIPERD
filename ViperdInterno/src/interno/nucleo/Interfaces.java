@@ -56,6 +56,7 @@ public interface Interfaces {
     }
     interface IDAO {
         void Conectar(IDTO dto);
+        void Conectar(String origen);
         void Seleccionar(IDTO dto);
         void Editar(IDTO dto);
         void Borrar(IDTO dto);

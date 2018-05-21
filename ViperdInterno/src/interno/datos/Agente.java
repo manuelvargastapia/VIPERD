@@ -25,17 +25,12 @@ public abstract class Agente implements IDAO {
     public Agente() {
         TRAZADOR.info(this.getClass().getSimpleName());
     }
-    protected void Configurar(IDTO dto) {
-        dto.getPeticion().setFuente(this.fuente);
-        dto.getPeticion().setComando(generarSQL(this.comando, this.fuente, dto));
-        TRAZADOR.info("origen: " + this.origen + " - fuente: " + this.fuente);
-        this.dao.Conectar(dto);
-    }
     
     //IMPLEMENTACION DE LA INTERFACE "IDAO"
-    @Override public void Conectar(IDTO dto) {
-        this.operacion = dto.getPeticion().getOperacion();
-        TRAZADOR.info("operacion: " + this.operacion);
+    @Override public void Conectar(String origen) {
+        this.origen = origen;
+        Activar(this.origen);
+        TRAZADOR.info("origen: " + this.origen);
     }
     @Override public void Seleccionar(IDTO dto) {
         this.dao.Seleccionar(dto);
@@ -50,10 +45,15 @@ public abstract class Agente implements IDAO {
         this.dao.Borrar(dto);
     }
 
-    //FUNCIONES PUBLICAS
-    
     //FUNCIONES INTERNAS
-    private String generarSQL(String expresion, String tabla, IDTO dto) {
+    protected void Configurar(IDTO dto) {
+        dto.getPeticion().setFuente(this.fuente);
+        dto.getPeticion().setComando(generarSQL(this.comando, this.fuente, dto));
+        TRAZADOR.info("origen: " + this.origen + " - fuente: " + this.fuente);
+        this.dao.Conectar(dto);
+    }
+    protected void Activar(String origen) {}
+    protected String generarSQL(String expresion, String tabla, IDTO dto) {
         String sql = "", clave = "", valor = "";
         StringBuilder str1, str2;
         String[] columnas;

@@ -47,6 +47,9 @@ public final class DaoSQLite implements IDAO {
     @Override public void Conectar(IDTO dto) {
         //No implementada
     }
+    @Override public void Conectar(String origen) {
+        //No implementada
+    }
     @Override public void Seleccionar(IDTO dto) {
         String expresion = "";
         try {

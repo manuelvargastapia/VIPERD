@@ -40,6 +40,10 @@ public class InteractorUsuarios extends Interactor {
                 break;
             case CONSULTAR_USUARIOS:
                 usuario = new Usuario();
+                /* dto.getPeticion().setOperacion("ListaUsuarios");
+                dto.getPeticion().setFuente("");
+                dto.getPeticion().setComando("SELECT * FROM app_usuarios WHERE 1");
+                dto.getAgente().Conectar("SQLite"); */
                 this.prepararOperacion(dto, usuario, "ListaUsuarios");
                 dto.getAgente().Seleccionar(dto);
                 this.procesarRespuesta(dto, usuario, "L");
