@@ -18,14 +18,8 @@ public class ${name} extends Agente {
     }
 
     //CONFIGURACION DEL AGENTE
-    @Override public void Conectar(IDTO dto) {
-        super.Conectar(dto);
-        try {
-            this.origen = OPERACION.valueOf(this.operacion).Origen();
-            this.comando = OPERACION.valueOf(this.operacion).Comando();
-            this.fuente = OPERACION.valueOf(this.operacion).Fuente();
-        } catch (Exception e) {TRAZADOR.info(e.getMessage());}
-        switch (this.origen) {
+    @Override protected void Activar(String origen) {
+        switch (origen) {
             case "SQLite":
                 this.dao = DaoSQLite.Activar("bd//bd.sqlite", "", "");
                 break;
@@ -36,7 +30,6 @@ public class ${name} extends Agente {
                 this.dao = DaoHTTPJson.Activar("http://localhost/aplicacion/", "", "");
                 break;
         }
-        Configurar(dto);
     }
 
     //DEFINICION DE OPERACIONES
@@ -52,5 +45,18 @@ public class ${name} extends Agente {
         @Override public String Origen() {return this.origen;}
         @Override public String Comando() {return this.comando;}
         @Override public String Fuente() {return this.fuente;}
+    }
+
+    //IMPLEMENTACION DE LA INTERFACE "IDAO"
+    @Override public void Conectar(IDTO dto) {
+        this.operacion = dto.getPeticion().getOperacion();
+        TRAZADOR.info("operacion: " + this.operacion);
+        try {
+            this.origen = OPERACION.valueOf(this.operacion).Origen();
+            this.comando = OPERACION.valueOf(this.operacion).Comando();
+            this.fuente = OPERACION.valueOf(this.operacion).Fuente();
+        } catch (Exception e) {TRAZADOR.info(e.getMessage());}
+        Activar(this.origen);
+        Configurar(dto);
     }
 }
