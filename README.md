@@ -19,8 +19,8 @@ Viperd-Web:
 https://github.com/masexperto/VIPERD/blob/master/viperd/docs/arquitectura-viperd-web.pdf
 
 
-Actualmente estamos trabajando en la construcción de la biblioteca ViperdAndroid para Aplicaciones Móviles, la que incorporaremos al repositorio a principios de junio de 2018.
+Actualmente estamos trabajando en la construcción de la biblioteca ViperdAndroid para Aplicaciones Móviles, la que incorporaremos al repositorio en julio de 2018.
 
 Estamos también desarrollando activamente las primeras implementaciones de la capa de VISTA, en los entornos DESKTOP, WEB y ANDROID. Cuando estén listas las primeras versiones se podrán construir aplicaciones completamente funcionales con VIPERD.
 
-(Actualizado el 20 de mayo de 2018)
+(Actualizado el 30 de junio de 2018)
